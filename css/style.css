@@ -156,13 +156,20 @@ body {
     background-color: #f1f5f9; /* Светло-серый фон для текста заметки */
     border-radius: var(--radius);
     font-size: 0.85rem;
-    color: #475569;
+    /* color: #475569; */
     border-left: 3px solid var(--primary); /* Красивая полоска слева */
 }
 
 /* Этот класс мы будем добавлять/удалять программно */
 .task-list__memo--active {
     display: block; /* Показываем, когда класс активен */
+    animation: slideDown 0.3s ease-out; /* Анимация появления заметки */
+}
+
+/* Анимация появления заметки */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .task-list__text--done {

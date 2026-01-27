@@ -40,7 +40,8 @@ function renderTasks() {
                 <button class="task-list__btn--delete">🗑</button>
             </div>
             <div class="task-list__memo ${task.isCompleted ? '' : 'task-list__memo--hidden'}">
-                ${task.memo}
+                <div class="task-list__memo-content" contenteditable="true" placeholder="Добавьте описание...">${task.memo}</div>
+                <button class="task-list__memo-save">Сохранить заметку</button>
             </div>
         `;
 
@@ -65,6 +66,7 @@ function addTask() {
             text: text,
             isCompleted: false,
             memo: '', // Пока пустое мемо
+            // memo: 'Это секретная заметка для задачи: ' + text,
             date: new Date().toISOString().split('T')[0] // Сегодняшняя дата
         };
 
@@ -111,4 +113,58 @@ taskListElement.addEventListener('click', (e) => {
         saveToLocalStorage();
         renderTasks();
     }
+
+    // Если нажата кнопка Мемо (📝)
+    if (e.target.classList.contains('task-list__memo-toggle')) {
+        // Находим блок мемо внутри текущей карточки
+        const memoBlock = parentLi.querySelector('.task-list__memo');
+        
+        // Переключаем класс видимости
+        memoBlock.classList.toggle('task-list__memo--active');
+    }
+
+    // Если нажата кнопка "Сохранить заметку"
+    if (e.target.classList.contains('task-list__memo-save')) {
+        const memoContent = parentLi.querySelector('.task-list__memo-content').innerText;
+        const task = tasks.find(t => t.id === id);
+        
+        task.memo = memoContent; // Обновляем данные в массиве
+        saveToLocalStorage();
+        // alert('Заметка сохранена!'); // Временное уведомление
+        // Подсветим кнопку зеленым на секунду в знак успеха
+        e.target.innerText = '✅ Сохранено!';
+        e.target.style.backgroundColor = '#22c55e'; // Зеленый
+
+        setTimeout(() => {
+            e.target.innerText = 'Сохранить заметку';
+            // Вместо принудительного цвета просто сбрасываем стиль:
+            e.target.style.backgroundColor = ''; 
+        }, 2000);
+    }
+
+    // Если нажата кнопка Редактировать (✎)
+    if (e.target.classList.contains('task-list__btn--edit')) {
+    const textSpan = parentLi.querySelector('.task-list__text');
+    
+    textSpan.contentEditable = true;
+    textSpan.focus();
+
+    // 1. Обработка клавиш (Enter для сохранения)
+    textSpan.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Запрещаем перенос строки
+            textSpan.blur(); // Убираем фокус (это само вызовет событие 'blur')
+        }
+    });
+
+    // 2. Логика сохранения (срабатывает при потере фокуса)
+    textSpan.addEventListener('blur', () => {
+        textSpan.contentEditable = false;
+        const task = tasks.find(t => t.id === id);
+        task.text = textSpan.innerText.trim();
+        saveToLocalStorage();
+        // Мы не вызываем renderTasks(), чтобы не "прыгал" курсор, 
+        // данные уже в массиве и в памяти.
+    }, { once: true });
+}
 });
