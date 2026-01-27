@@ -42,3 +42,42 @@ function renderTasks() {
 }
 
 renderTasks();
+
+// 1. Находим элементы ввода
+const inputField = document.querySelector('.todo-input__field');
+const addBtn = document.querySelector('.todo-input__add-btn');
+
+// 2. Функция добавления задачи
+function addTask() {
+    const text = inputField.value.trim(); // trim убирает лишние пробелы
+
+    if (text !== '') {
+        // Создаем новый объект задачи
+        const newTask = {
+            id: Date.now(),
+            text: text,
+            isCompleted: false,
+            memo: '', // Пока пустое мемо
+            date: new Date().toISOString().split('T')[0] // Сегодняшняя дата
+        };
+
+        // Добавляем в массив
+        tasks.push(newTask);
+
+        // Очищаем поле ввода
+        inputField.value = '';
+
+        // Перерисовываем список
+        renderTasks();
+    }
+}
+
+// 3. Слушаем клик по кнопке
+addBtn.addEventListener('click', addTask);
+
+// 4. Слушаем нажатие Enter в инпуте
+inputField.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        addTask();
+    }
+});
