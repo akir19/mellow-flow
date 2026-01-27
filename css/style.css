@@ -70,17 +70,81 @@ body {
     border-color: var(--primary); /* Красивая подсветка при клике */
 }
 
-.todo-input__add-btn {
+.todo-input__add-btn, 
+.todo-input__clear-btn { /* Добавил стиль для второй кнопки */
     background-color: var(--primary);
     color: white;
     border: none;
     border-radius: var(--radius);
-    padding: 0 20px;
+
+    /* padding: 0 20px;
     font-size: 1.5rem;
     cursor: pointer;
-    transition: transform 0.1s, opacity 0.2s;
+    transition: transform 0.1s, opacity 0.2s; */
+    /* Делаем кнопку квадратной и фиксированной */
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-size: 1.2rem;
+    cursor: pointer;
+    flex-shrink: 0; /* Чтобы кнопка не сжималась, если текст в инпуте длинный */
+}
+
+/* Модификатор для кнопки очистки (сделаем её другого цвета) */
+.todo-input__clear-btn {
+    background-color: var(--accent);
 }
 
 .todo-input__add-btn:active {
     transform: scale(0.95); /* Эффект нажатия */
+}
+
+.task-list {
+    list-style: none;
+    padding: 0 20px; /* Отступы по бокам, чтобы карточки не прилипали к краям */
+    margin: 0;
+}
+
+.task-list__item {
+    background: white;
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    padding: 12px;
+    border: 1px solid #edf2f7; /* Тонкая рамка для четкости */
+}
+
+.task-list__main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.task-list__text {
+    flex-grow: 1; /* Занимает всё место */
+    font-size: 0.95rem;
+    color: var(--bg-dark);
+}
+
+.task-list__main button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 5px;
+    transition: transform 0.2s;
+    opacity: 0.6; /* Сделаем кнопки чуть бледнее, чтобы не отвлекали */
+}
+
+.task-list__main button:hover {
+    transform: scale(1.2);
+    opacity: 1; /* Оживают при наведении */
+}
+
+/* Красная корзина для удаления */
+.task-list__btn--delete:hover {
+    color: var(--accent);
 }
