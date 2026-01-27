@@ -1,13 +1,19 @@
 // Наш "банк данных"
-let tasks = [
-    {
-        id: Date.now(),
-        text: "Создать первое приложение в MellowFlow",
-        isCompleted: false,
-        memo: "Использовать CSS Grid и Flexbox для верстки",
-        date: "2026-01-27"
-    }
-];
+// let tasks = [
+//     {
+//         id: Date.now(),
+//         text: "Создать первое приложение в MellowFlow",
+//         isCompleted: false,
+//         memo: "Использовать CSS Grid и Flexbox для верстки",
+//         date: "2026-01-27"
+//     }
+// ];
+let tasks = JSON.parse(localStorage.getItem('mellowTasks')) || [];
+
+// Функция сохранения в память
+function saveToLocalStorage() {
+    localStorage.setItem('mellowTasks', JSON.stringify(tasks));
+}
 
 // 1. Находим список в HTML, куда будем добавлять задачи
 const taskListElement = document.querySelector('.task-list');
@@ -20,6 +26,7 @@ function renderTasks() {
         // Создаем элемент списка
         const li = document.createElement('li');
         li.classList.add('task-list__item');
+        li.setAttribute('data-id', task.id);
 
         // Генерируем внутренний HTML
         li.innerHTML = `
@@ -63,6 +70,7 @@ function addTask() {
 
         // Добавляем в массив
         tasks.push(newTask);
+        saveToLocalStorage();
 
         // Очищаем поле ввода
         inputField.value = '';
@@ -79,5 +87,28 @@ addBtn.addEventListener('click', addTask);
 inputField.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         addTask();
+    }
+});
+
+taskListElement.addEventListener('click', (e) => {
+    // Ищем ближайший родительский li, у которого есть наш data-id
+    const parentLi = e.target.closest('.task-list__item');
+    if (!parentLi) return;
+    
+    const id = Number(parentLi.getAttribute('data-id'));
+
+    // Если нажата кнопка удаления
+    if (e.target.classList.contains('task-list__btn--delete')) {
+        tasks = tasks.filter(task => task.id !== id); // Оставляем все задачи, кроме этой
+        saveToLocalStorage();
+        renderTasks();
+    }
+
+    // Если нажат чекбокс
+    if (e.target.classList.contains('task-list__checkbox')) {
+        const task = tasks.find(t => t.id === id);
+        task.isCompleted = !task.isCompleted;
+        saveToLocalStorage();
+        renderTasks();
     }
 });
