@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <main class="todo-app">
+        <header class="todo-app__header">
+            <button class="todo-app__menu-btn">☰</button>
+            <h1 class="todo-app__title">Mellow Tasks</h1>
+            <button class="todo-app__theme-btn">🌙</button>
+        </header>
+
+        <section class="todo-input">
+            <input class="todo-input__field" placeholder="Что нужно сделать?">
+            <button class="todo-input__add-btn">+</button>            
+        </section>
+
+        <ul class="task-list">
+            <li class="task-list__item">
+                <div class="task-list__main">
+                    <input type="checkbox" class="task-list__checkbox">
+                    <span class="task-list__text">Купить кофе</span>
+                    <button class="task-list__memo-toggle">📝</button> <button class="task-list__btn--edit">✎</button>
+                    <button class="task-list__btn--delete">🗑</button>
+                </div>
+                
+                <div class="task-list__memo task-list__memo--hidden">
+                    Здесь будет текст до 500 символов...
+                </div>
+            </li>
+        </ul>
+    </main>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>
