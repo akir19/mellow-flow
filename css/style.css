@@ -148,3 +148,25 @@ body {
 .task-list__btn--delete:hover {
     color: var(--accent);
 }
+
+.task-list__memo {
+    display: none; /* Скрываем по умолчанию */
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #f1f5f9; /* Светло-серый фон для текста заметки */
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    color: #475569;
+    border-left: 3px solid var(--primary); /* Красивая полоска слева */
+}
+
+/* Этот класс мы будем добавлять/удалять программно */
+.task-list__memo--active {
+    display: block; /* Показываем, когда класс активен */
+}
+
+.task-list__text--done {
+    text-decoration: line-through;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
