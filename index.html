@@ -8,6 +8,15 @@
 </head>
 <body>
     <main class="todo-app">
+        <div class="side-menu side-menu--hidden">
+            <button class="side-menu__close">×</button>
+            <nav class="side-menu__nav">
+                <button id="clear-all">🗑 Очистить все задачи</button>
+                <button id="sort-tasks">⏳ Сортировать (А-Я)</button>
+                <button id="export-tasks">📥 Экспорт в JSON</button>
+            </nav>
+        </div>
+        
         <header class="todo-app__header">
             <button class="todo-app__menu-btn">☰</button>
             <h1 class="todo-app__title">Mellow Tasks</h1>

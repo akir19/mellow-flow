@@ -20,6 +20,7 @@ body {
     display: flex;
     justify-content: center; /* Центрируем приложение по горизонтали */
     min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .todo-app__header {
@@ -31,6 +32,7 @@ body {
     gap: 1rem; /* Расстояние между элементами */
     background: white;
     box-shadow: var(--shadow);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .todo-app__title {
@@ -176,4 +178,96 @@ body {
     text-decoration: line-through;
     opacity: 0.5;
     transition: all 0.3s ease;
+}
+
+/* Цвета для темной темы */
+body.dark-theme {
+    --bg-light: #0f172a; /* Темный фон страницы */
+    --bg-dark: #f8fafc;  /* Светлый текст */
+    background-color: var(--bg-light);
+}
+
+body.dark-theme .todo-app {
+    background-color: #1e293b; /* Темный фон контейнера */
+    color: var(--bg-dark);
+}
+
+body.dark-theme .task-list__item {
+    background-color: #334155;
+    border-color: #475569;
+}
+
+body.dark-theme .task-list__text {
+    color: #f1f5f9;
+}
+
+body.dark-theme .todo-app__title {
+    color: white;
+}
+
+/* Уточняем цвет текста для всех полей ввода и мемо */
+body.dark-theme .task-list__memo-content,
+body.dark-theme .todo-input__field {
+    color: #f1f5f9; /* Светло-серый/белый */
+    background-color: #1e293b; /* Чуть темнее фон для контраста */
+    border-color: #475569;
+}
+
+/* Цвет плейсхолдера для инпута в темной теме */
+body.dark-theme .todo-input__field::placeholder {
+    color: #94a3b8;
+}
+
+.side-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    /* Используем конкретный цвет, который не меняется от темы */
+    background-color: #1e293b; 
+    color: #f8fafc;
+    z-index: 100;
+    padding: 20px;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.side-menu--hidden {
+    transform: translateX(-100%); /* Прячем за левый край */
+}
+
+.side-menu__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+/* Кнопки внутри меню тоже фиксируем */
+.side-menu__nav button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #475569;
+    color: #f8fafc; /* Всегда светлый текст на темном фоне меню */
+    padding: 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.side-menu__nav button:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.side-menu__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
 }

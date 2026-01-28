@@ -168,3 +168,51 @@ taskListElement.addEventListener('click', (e) => {
     }, { once: true });
 }
 });
+
+const themeBtn = document.querySelector('.todo-app__theme-btn');
+
+themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    
+    // Меняем иконку в зависимости от темы
+    if (document.body.classList.contains('dark-theme')) {
+        themeBtn.innerText = '☀️';
+    } else {
+        themeBtn.innerText = '🌙';
+    }
+
+    // Сохраним выбор пользователя
+    const isDark = document.body.classList.contains('dark-theme');
+    localStorage.setItem('darkTheme', isDark);
+});
+
+// Проверка темы при загрузке страницы
+if (localStorage.getItem('darkTheme') === 'true') {
+    document.body.classList.add('dark-theme');
+    themeBtn.innerText = '☀️';
+}
+
+const menuBtn = document.querySelector('.todo-app__menu-btn');
+const sideMenu = document.querySelector('.side-menu');
+const closeMenuBtn = document.querySelector('.side-menu__close');
+const clearAllBtn = document.querySelector('#clear-all');
+
+// Открыть меню
+menuBtn.addEventListener('click', () => {
+    sideMenu.classList.remove('side-menu--hidden');
+});
+
+// Закрыть меню
+closeMenuBtn.addEventListener('click', () => {
+    sideMenu.classList.add('side-menu--hidden');
+});
+
+// Команда: Очистить всё
+clearAllBtn.addEventListener('click', () => {
+    if (confirm('Удалить вообще все задачи?')) {
+        tasks = [];
+        saveToLocalStorage();
+        renderTasks();
+        sideMenu.classList.add('side-menu--hidden');
+    }
+});
