@@ -1,13 +1,3 @@
-// Наш "банк данных"
-// let tasks = [
-//     {
-//         id: Date.now(),
-//         text: "Создать первое приложение в MellowFlow",
-//         isCompleted: false,
-//         memo: "Использовать CSS Grid и Flexbox для верстки",
-//         date: "2026-01-27"
-//     }
-// ];
 let tasks = JSON.parse(localStorage.getItem('mellowTasks')) || [];
 
 // Функция сохранения в память
@@ -215,4 +205,28 @@ clearAllBtn.addEventListener('click', () => {
         renderTasks();
         sideMenu.classList.add('side-menu--hidden');
     }
+});
+
+// Находим новые элементы
+const sortBtn = document.querySelector('#sort-tasks');
+const aboutBtn = document.querySelector('#about-app');
+const aboutModal = document.querySelector('#about-modal');
+const closeAboutBtn = document.querySelector('.modal__close');
+
+// 1. Логика сортировки
+sortBtn.addEventListener('click', () => {
+    tasks.sort((a, b) => a.text.localeCompare(b.text)); // Сортируем по тексту (А-Я)
+    saveToLocalStorage();
+    renderTasks();
+    sideMenu.classList.add('side-menu--hidden'); // Закрываем меню
+});
+
+// 2. Логика "О приложении"
+aboutBtn.addEventListener('click', () => {
+    aboutModal.classList.remove('modal--hidden');
+});
+
+closeAboutBtn.addEventListener('click', () => {
+    aboutModal.classList.add('modal--hidden');
+    sideMenu.classList.add('side-menu--hidden');
 });

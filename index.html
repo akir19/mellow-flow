@@ -13,10 +13,18 @@
             <nav class="side-menu__nav">
                 <button id="clear-all">🗑 Очистить все задачи</button>
                 <button id="sort-tasks">⏳ Сортировать (А-Я)</button>
-                <button id="export-tasks">📥 Экспорт в JSON</button>
+                <button id="about-app">ℹ️ О приложении...</button>
             </nav>
+            <div id="about-modal" class="modal modal--hidden">
+            <div class="modal__content">
+                <h3>MellowFlow v1.1</h3>
+                <p>Это не просто To-Do лист, это твой личный поток продуктивности. Создано в MellowCode Studio.</p>
+                <p>Технологии: HTML5, CSS Grid/Flexbox, Vanilla JavaScript и LocalStorage.</p>
+                <button class="modal__close">Понятно!</button>
+            </div>
+</div>
         </div>
-        
+
         <header class="todo-app__header">
             <button class="todo-app__menu-btn">☰</button>
             <h1 class="todo-app__title">Mellow Tasks</h1>
@@ -28,20 +36,7 @@
             <button class="todo-input__add-btn">+</button>            
         </section>
 
-        <ul class="task-list">
-            <!-- <li class="task-list__item">
-                <div class="task-list__main">
-                    <input type="checkbox" class="task-list__checkbox">
-                    <span class="task-list__text">Купить кофе</span>
-                    <button class="task-list__memo-toggle">📝</button> <button class="task-list__btn--edit">✎</button>
-                    <button class="task-list__btn--delete">🗑</button>
-                </div>
-                
-                <div class="task-list__memo task-list__memo--hidden">
-                    Здесь будет текст до 500 символов...
-                </div>
-            </li> -->
-        </ul>
+        <ul class="task-list"> </ul>
     </main>
 
     <script src="js/script.js"></script>

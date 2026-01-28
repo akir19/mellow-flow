@@ -79,10 +79,6 @@ body {
     border: none;
     border-radius: var(--radius);
 
-    /* padding: 0 20px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: transform 0.1s, opacity 0.2s; */
     /* Делаем кнопку квадратной и фиксированной */
     width: 48px;
     height: 48px;
@@ -269,5 +265,31 @@ body.dark-theme .todo-input__field::placeholder {
     background: none;
     border: none;
     color: #94a3b8;
+    cursor: pointer;
+}
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+}
+.modal--hidden { display: none; }
+.modal__content {
+    background: var(--bg-dark);
+    color: var(--bg-light);
+    padding: 30px;
+    border-radius: var(--radius);
+    max-width: 400px;
+    text-align: center;
+}
+.modal__close {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
     cursor: pointer;
 }
