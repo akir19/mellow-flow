@@ -1,36 +1,35 @@
 let tasks = JSON.parse(localStorage.getItem('mellowTasks')) || [];
 
-// Функция сохранения в память
 function saveToLocalStorage() {
     localStorage.setItem('mellowTasks', JSON.stringify(tasks));
 }
 
-// 1. Находим список в HTML, куда будем добавлять задачи
 const taskListElement = document.querySelector('.task-list');
 
-// 2. Функция для отрисовки (рендера) задач на экран
 function renderTasks() {
     taskListElement.innerHTML = ''; 
 
     tasks.forEach((task) => {
-        // Создаем элемент списка
         const li = document.createElement('li');
         li.classList.add('task-list__item');
         li.setAttribute('data-id', task.id);
 
-        // Генерируем внутренний HTML
+        // Определяем, есть ли текст в мемо для подсветки кнопки
+        const hasMemo = task.memo && task.memo.trim() !== '';
+        const memoBtnClass = hasMemo ? 'has-content' : '';
+
         li.innerHTML = `
             <div class="task-list__main">
                 <input type="checkbox" class="task-list__checkbox" ${task.isCompleted ? 'checked' : ''}>
                 <span class="task-list__text ${task.isCompleted ? 'task-list__text--done' : ''}">
                     ${task.text}
                 </span>
-                <button class="task-list__memo-toggle">📝</button>
+                <button class="task-list__btn--memo ${memoBtnClass}">📝</button>
                 <button class="task-list__btn--edit">✎</button>
                 <button class="task-list__btn--delete">🗑</button>
             </div>
-            <div class="task-list__memo ${task.isCompleted ? '' : 'task-list__memo--hidden'}">
-                <div class="task-list__memo-content" contenteditable="true" placeholder="Добавьте описание...">${task.memo}</div>
+            <div class="task-list__memo">
+                <div class="task-list__memo-content" contenteditable="true" placeholder="Добавьте описание...">${task.memo || ''}</div>
                 <button class="task-list__memo-save">Сохранить заметку</button>
             </div>
         `;
@@ -41,165 +40,126 @@ function renderTasks() {
 
 renderTasks();
 
-// 1. Находим элементы ввода
 const inputField = document.querySelector('.todo-input__field');
 const addBtn = document.querySelector('.todo-input__add-btn');
 
-// 2. Функция добавления задачи
 function addTask() {
-    const text = inputField.value.trim(); // trim убирает лишние пробелы
-
+    const text = inputField.value.trim();
     if (text !== '') {
-        // Создаем новый объект задачи
         const newTask = {
             id: Date.now(),
             text: text,
             isCompleted: false,
-            memo: '', // Пока пустое мемо
-            // memo: 'Это секретная заметка для задачи: ' + text,
-            date: new Date().toISOString().split('T')[0] // Сегодняшняя дата
+            memo: '',
+            date: new Date().toISOString().split('T')[0]
         };
-
-        // Добавляем в массив
         tasks.push(newTask);
         saveToLocalStorage();
-
-        // Очищаем поле ввода
         inputField.value = '';
-
-        // Перерисовываем список
         renderTasks();
     }
 }
 
-// 3. Слушаем клик по кнопке
 addBtn.addEventListener('click', addTask);
-
-// 4. Слушаем нажатие Enter в инпуте
 inputField.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        addTask();
-    }
+    if (e.key === 'Enter') addTask();
 });
 
 taskListElement.addEventListener('click', (e) => {
-    // Ищем ближайший родительский li, у которого есть наш data-id
     const parentLi = e.target.closest('.task-list__item');
     if (!parentLi) return;
     
     const id = Number(parentLi.getAttribute('data-id'));
+    const task = tasks.find(t => t.id === id);
 
-    // Если нажата кнопка удаления
+    // Удаление
     if (e.target.classList.contains('task-list__btn--delete')) {
-        tasks = tasks.filter(task => task.id !== id); // Оставляем все задачи, кроме этой
+        tasks = tasks.filter(t => t.id !== id);
         saveToLocalStorage();
         renderTasks();
     }
 
-    // Если нажат чекбокс
+    // Чекбокс
     if (e.target.classList.contains('task-list__checkbox')) {
-        const task = tasks.find(t => t.id === id);
         task.isCompleted = !task.isCompleted;
         saveToLocalStorage();
         renderTasks();
     }
 
-    // Если нажата кнопка Мемо (📝)
-    if (e.target.classList.contains('task-list__memo-toggle')) {
-        // Находим блок мемо внутри текущей карточки
+    // Открытие/Закрытие Мемо
+    if (e.target.classList.contains('task-list__btn--memo')) {
         const memoBlock = parentLi.querySelector('.task-list__memo');
-        
-        // Переключаем класс видимости
         memoBlock.classList.toggle('task-list__memo--active');
     }
 
-    // Если нажата кнопка "Сохранить заметку"
+    // Сохранение Мемо
     if (e.target.classList.contains('task-list__memo-save')) {
         const memoContent = parentLi.querySelector('.task-list__memo-content').innerText;
-        const task = tasks.find(t => t.id === id);
-        
-        task.memo = memoContent; // Обновляем данные в массиве
+        task.memo = memoContent;
         saveToLocalStorage();
-        // alert('Заметка сохранена!'); // Временное уведомление
-        // Подсветим кнопку зеленым на секунду в знак успеха
+        
+        // Визуальный отклик
         e.target.innerText = '✅ Сохранено!';
-        e.target.style.backgroundColor = '#22c55e'; // Зеленый
+        e.target.style.backgroundColor = '#22c55e';
+        
+        // Обновляем подсветку иконки 📝 без полной перерисовки
+        const memoIconBtn = parentLi.querySelector('.task-list__btn--memo');
+        if (task.memo.trim() !== '') {
+            memoIconBtn.classList.add('has-content');
+        } else {
+            memoIconBtn.classList.remove('has-content');
+        }
 
         setTimeout(() => {
             e.target.innerText = 'Сохранить заметку';
-            // Вместо принудительного цвета просто сбрасываем стиль:
             e.target.style.backgroundColor = ''; 
         }, 2000);
     }
 
-    // Если нажата кнопка Редактировать (✎)
+    // Редактирование текста задачи
     if (e.target.classList.contains('task-list__btn--edit')) {
-    const textSpan = parentLi.querySelector('.task-list__text');
-    
-    textSpan.contentEditable = true;
-    textSpan.focus();
+        const textSpan = parentLi.querySelector('.task-list__text');
+        textSpan.contentEditable = true;
+        textSpan.focus();
 
-    // 1. Обработка клавиш (Enter для сохранения)
-    textSpan.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Запрещаем перенос строки
-            textSpan.blur(); // Убираем фокус (это само вызовет событие 'blur')
-        }
-    });
+        textSpan.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                textSpan.blur();
+            }
+        });
 
-    // 2. Логика сохранения (срабатывает при потере фокуса)
-    textSpan.addEventListener('blur', () => {
-        textSpan.contentEditable = false;
-        const task = tasks.find(t => t.id === id);
-        task.text = textSpan.innerText.trim();
-        saveToLocalStorage();
-        // Мы не вызываем renderTasks(), чтобы не "прыгал" курсор, 
-        // данные уже в массиве и в памяти.
-    }, { once: true });
-}
+        textSpan.addEventListener('blur', () => {
+            textSpan.contentEditable = false;
+            task.text = textSpan.innerText.trim();
+            saveToLocalStorage();
+        }, { once: true });
+    }
 });
 
+// Тема
 const themeBtn = document.querySelector('.todo-app__theme-btn');
-
 themeBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark-theme');
-    
-    // Меняем иконку в зависимости от темы
-    if (document.body.classList.contains('dark-theme')) {
-        themeBtn.innerText = '☀️';
-    } else {
-        themeBtn.innerText = '🌙';
-    }
-
-    // Сохраним выбор пользователя
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('darkTheme', isDark);
+    themeBtn.innerText = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+    localStorage.setItem('darkTheme', document.body.classList.contains('dark-theme'));
 });
 
-// Проверка темы при загрузке страницы
 if (localStorage.getItem('darkTheme') === 'true') {
     document.body.classList.add('dark-theme');
     themeBtn.innerText = '☀️';
 }
 
+// Меню
 const menuBtn = document.querySelector('.todo-app__menu-btn');
 const sideMenu = document.querySelector('.side-menu');
 const closeMenuBtn = document.querySelector('.side-menu__close');
-const clearAllBtn = document.querySelector('#clear-all');
 
-// Открыть меню
-menuBtn.addEventListener('click', () => {
-    sideMenu.classList.remove('side-menu--hidden');
-});
+menuBtn.addEventListener('click', () => sideMenu.classList.remove('side-menu--hidden'));
+closeMenuBtn.addEventListener('click', () => sideMenu.classList.add('side-menu--hidden'));
 
-// Закрыть меню
-closeMenuBtn.addEventListener('click', () => {
-    sideMenu.classList.add('side-menu--hidden');
-});
-
-// Команда: Очистить всё
-clearAllBtn.addEventListener('click', () => {
-    if (confirm('Удалить вообще все задачи?')) {
+document.querySelector('#clear-all').addEventListener('click', () => {
+    if (confirm('Удалить все задачи?')) {
         tasks = [];
         saveToLocalStorage();
         renderTasks();
@@ -207,26 +167,16 @@ clearAllBtn.addEventListener('click', () => {
     }
 });
 
-// Находим новые элементы
-const sortBtn = document.querySelector('#sort-tasks');
-const aboutBtn = document.querySelector('#about-app');
-const aboutModal = document.querySelector('#about-modal');
-const closeAboutBtn = document.querySelector('.modal__close');
-
-// 1. Логика сортировки
-sortBtn.addEventListener('click', () => {
-    tasks.sort((a, b) => a.text.localeCompare(b.text)); // Сортируем по тексту (А-Я)
+document.querySelector('#sort-tasks').addEventListener('click', () => {
+    tasks.sort((a, b) => a.text.localeCompare(b.text));
     saveToLocalStorage();
     renderTasks();
-    sideMenu.classList.add('side-menu--hidden'); // Закрываем меню
+    sideMenu.classList.add('side-menu--hidden');
 });
 
-// 2. Логика "О приложении"
-aboutBtn.addEventListener('click', () => {
-    aboutModal.classList.remove('modal--hidden');
-});
-
-closeAboutBtn.addEventListener('click', () => {
+const aboutModal = document.querySelector('#about-modal');
+document.querySelector('#about-app').addEventListener('click', () => aboutModal.classList.remove('modal--hidden'));
+document.querySelector('.modal__close').addEventListener('click', () => {
     aboutModal.classList.add('modal--hidden');
     sideMenu.classList.add('side-menu--hidden');
 });

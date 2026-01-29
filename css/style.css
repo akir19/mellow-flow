@@ -1,15 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap');
 
 :root {
-    /* Основные цвета Mellow Studio */
-    --primary: #6366f1;       /* Индиго */
-    --accent: #f43f5e;        /* Розовый (для удаления/важного) */
+    --primary: #6366f1;
+    --accent: #f43f5e;
     --bg-light: #f8fafc;
     --bg-dark: #0f172a;
-    
-    /* Шрифты и размеры */
     --font-main: 'Inter', sans-serif;
-    --radius: 12px;           /* Скругление углов */
+    --radius: 12px;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
@@ -18,38 +15,38 @@ body {
     font-family: var(--font-main);
     margin: 0;
     display: flex;
-    justify-content: center; /* Центрируем приложение по горизонтали */
+    justify-content: center;
     min-height: 100vh;
     transition: background-color 0.3s, color 0.3s;
 }
 
+.todo-app {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+}
+
 .todo-app__header {
     display: grid;
-    /* Создаем 3 колонки: боковые подстраиваются под контент, центр забирает всё свободное место */
     grid-template-columns: auto 1fr auto; 
-    align-items: center; /* Центрируем иконки и текст по вертикали */
+    align-items: center;
     padding: 1rem;
-    gap: 1rem; /* Расстояние между элементами */
     background: white;
     box-shadow: var(--shadow);
-    transition: background-color 0.3s, color 0.3s;
+    z-index: 10;
 }
 
 .todo-app__title {
     font-size: 1.25rem;
     margin: 0;
-    font-family: var(--font-main);
-    color: var(--bg-dark);
+    color: #1e293b;
     text-align: center;
-}
-
-.todo-app {
-    width: 100%;
-    max-width: 500px; /* Ограничиваем ширину для десктопа */
-    background: white;
-    min-height: 100vh; /* На мобилках будет на весь экран */
-    display: flex;
-    flex-direction: column;
+    font-weight: 700;
 }
 
 .todo-input {
@@ -59,51 +56,27 @@ body {
 }
 
 .todo-input__field {
-    flex-grow: 1; /* Инпут забирает всё свободное место */
+    flex-grow: 1;
     padding: 12px 16px;
     border: 2px solid #e2e8f0;
     border-radius: var(--radius);
-    font-size: 1rem;
     outline: none;
-    transition: border-color 0.2s;
 }
 
-.todo-input__field:focus {
-    border-color: var(--primary); /* Красивая подсветка при клике */
-}
-
-.todo-input__add-btn, 
-.todo-input__clear-btn { /* Добавил стиль для второй кнопки */
+.todo-input__add-btn {
     background-color: var(--primary);
     color: white;
     border: none;
     border-radius: var(--radius);
-
-    /* Делаем кнопку квадратной и фиксированной */
     width: 48px;
     height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    font-size: 1.2rem;
     cursor: pointer;
-    flex-shrink: 0; /* Чтобы кнопка не сжималась, если текст в инпуте длинный */
-}
-
-/* Модификатор для кнопки очистки (сделаем её другого цвета) */
-.todo-input__clear-btn {
-    background-color: var(--accent);
-}
-
-.todo-input__add-btn:active {
-    transform: scale(0.95); /* Эффект нажатия */
+    font-size: 1.2rem;
 }
 
 .task-list {
     list-style: none;
-    padding: 0 20px; /* Отступы по бокам, чтобы карточки не прилипали к краям */
-    margin: 0;
+    padding: 0 20px;
 }
 
 .task-list__item {
@@ -112,7 +85,7 @@ body {
     margin-bottom: 12px;
     box-shadow: var(--shadow);
     padding: 12px;
-    border: 1px solid #edf2f7; /* Тонкая рамка для четкости */
+    border: 1px solid #edf2f7;
 }
 
 .task-list__main {
@@ -122,9 +95,13 @@ body {
 }
 
 .task-list__text {
-    flex-grow: 1; /* Занимает всё место */
-    font-size: 0.95rem;
-    color: var(--bg-dark);
+    flex-grow: 1;
+    color: #1e293b;
+}
+
+.task-list__text--done {
+    text-decoration: line-through;
+    opacity: 0.5;
 }
 
 .task-list__main button {
@@ -133,59 +110,71 @@ body {
     cursor: pointer;
     font-size: 1.1rem;
     padding: 5px;
-    transition: transform 0.2s;
-    opacity: 0.6; /* Сделаем кнопки чуть бледнее, чтобы не отвлекали */
+    opacity: 0.7;
+    transition: 0.2s;
 }
 
 .task-list__main button:hover {
-    transform: scale(1.2);
-    opacity: 1; /* Оживают при наведении */
+    opacity: 1;
+    transform: scale(1.1);
 }
 
-/* Красная корзина для удаления */
-.task-list__btn--delete:hover {
-    color: var(--accent);
-}
-
+/* Стили для Мемо */
 .task-list__memo {
-    display: none; /* Скрываем по умолчанию */
-    padding: 10px;
+    display: none;
+    padding: 12px;
     margin-top: 10px;
-    background-color: #f1f5f9; /* Светло-серый фон для текста заметки */
+    background-color: #f1f5f9;
     border-radius: var(--radius);
-    font-size: 0.85rem;
-    /* color: #475569; */
-    border-left: 3px solid var(--primary); /* Красивая полоска слева */
+    border-left: 4px solid var(--primary);
 }
 
-/* Этот класс мы будем добавлять/удалять программно */
 .task-list__memo--active {
-    display: block; /* Показываем, когда класс активен */
-    animation: slideDown 0.3s ease-out; /* Анимация появления заметки */
+    display: block;
+    animation: slideDown 0.3s ease-out;
 }
 
-/* Анимация появления заметки */
+.task-list__memo-content {
+    min-height: 40px;
+    margin-bottom: 10px;
+    outline: none;
+}
+
+.task-list__memo-save {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* Подсветка кнопки Мемо если есть текст */
+.task-list__btn--memo.has-content {
+    background-color: #fbbf24 !important;
+    border-radius: 8px;
+    opacity: 1 !important;
+    box-shadow: 0 0 5px rgba(251, 191, 36, 0.4);
+}
+
 @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.task-list__text--done {
-    text-decoration: line-through;
-    opacity: 0.5;
-    transition: all 0.3s ease;
-}
-
-/* Цвета для темной темы */
+/* ТЕМНАЯ ТЕМА */
 body.dark-theme {
-    --bg-light: #0f172a; /* Темный фон страницы */
-    --bg-dark: #f8fafc;  /* Светлый текст */
-    background-color: var(--bg-light);
+    background-color: #0f172a;
 }
 
-body.dark-theme .todo-app {
-    background-color: #1e293b; /* Темный фон контейнера */
-    color: var(--bg-dark);
+body.dark-theme .todo-app,
+body.dark-theme .todo-app__header {
+    background-color: #1e293b;
+}
+
+body.dark-theme .todo-app__title {
+    color: #ffffff;
 }
 
 body.dark-theme .task-list__item {
@@ -193,103 +182,44 @@ body.dark-theme .task-list__item {
     border-color: #475569;
 }
 
-body.dark-theme .task-list__text {
-    color: #f1f5f9;
+body.dark-theme .task-list__text,
+body.dark-theme .todo-app__theme-btn,
+body.dark-theme .todo-app__menu-btn {
+    /* color: #f1f5f9; */
+    /* color: #ffffff  */
+    color: var(--bg-dark) !important; /* Делаем иконки читаемыми на темном фоне */
+    opacity: 1;
 }
 
-body.dark-theme .todo-app__title {
+body.dark-theme .task-list__memo {
+    background-color: #1e293b;
+    color: #cbd5e1;
+}
+
+body.dark-theme .todo-input__field {
+    background-color: #334155;
+    border-color: #475569;
     color: white;
 }
 
-/* Уточняем цвет текста для всех полей ввода и мемо */
-body.dark-theme .task-list__memo-content,
-body.dark-theme .todo-input__field {
-    color: #f1f5f9; /* Светло-серый/белый */
-    background-color: #1e293b; /* Чуть темнее фон для контраста */
-    border-color: #475569;
-}
-
-/* Цвет плейсхолдера для инпута в темной теме */
-body.dark-theme .todo-input__field::placeholder {
-    color: #94a3b8;
-}
-
+/* Сайд-меню и модалки */
 .side-menu {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100%;
-    /* Используем конкретный цвет, который не меняется от темы */
-    background-color: #1e293b; 
-    color: #f8fafc;
-    z-index: 100;
-    padding: 20px;
-    box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+    top: 0; left: 0; width: 250px; height: 100%;
+    background: #1e293b; color: white;
+    z-index: 100; padding: 20px;
     transition: transform 0.3s ease;
 }
-
-.side-menu--hidden {
-    transform: translateX(-100%); /* Прячем за левый край */
-}
-
-.side-menu__nav {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 40px;
-}
-
-/* Кнопки внутри меню тоже фиксируем */
+.side-menu--hidden { transform: translateX(-100%); }
+.side-menu__nav { display: flex; flex-direction: column; gap: 10px; margin-top: 40px; }
 .side-menu__nav button {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #475569;
-    color: #f8fafc; /* Всегда светлый текст на темном фоне меню */
-    padding: 12px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    text-align: left;
-    transition: background 0.2s;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #475569; color: white;
+    padding: 10px; border-radius: 8px; cursor: pointer;
 }
-
-.side-menu__nav button:hover {
-    background: var(--primary);
-    color: white;
-}
-
-.side-menu__close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 2rem;
-    background: none;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-}
-
 .modal {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 1000;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;
 }
 .modal--hidden { display: none; }
-.modal__content {
-    background: var(--bg-dark);
-    color: var(--bg-light);
-    padding: 30px;
-    border-radius: var(--radius);
-    max-width: 400px;
-    text-align: center;
-}
-.modal__close {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-}
+.modal__content { background: #1e293b; color: white; padding: 30px; border-radius: 12px; text-align: center; }
